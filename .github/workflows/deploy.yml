@@ -24,6 +24,12 @@ jobs:
             git pull origin main
             docker stop devops-demo-app || true
             docker rm devops-demo-app || true
-            docker-compose up -d 
+            docker build -t devops-demo:latest .
+            docker run -d \
+              --name devops-demo-app \
+              --restart unless-stopped \
+              -p 5000:5000 \
+              -e ENV=production \
+              devops-demo:latest
             sleep 5
             curl -f http://62.84.114.79:5000/health || exit 1
